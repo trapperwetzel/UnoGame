@@ -9,7 +9,7 @@ This project is a version of the classic Uno Card Game.
 
 ## Project Progress
 
-This project has been great so far, and I am really enjoying it. The use of Enums and the thinking through of what Data Structures/Algorithms to use has been really fun.
+This project has been great so far, and I am really enjoying it. Thinking through what Data Structures/Algorithms to use, as well as using Enums effectively has been really fun.
 
 ---
 
