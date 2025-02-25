@@ -4,9 +4,24 @@
     {
         static void Main(string[] args)
         {
-            Card Card1 = new Card(CardType.Number,CardColor.Red);
-            Card.PrintAllCardTypes(); 
+            /*
+            Card Card1 = new Card(CardType.Number, CardColor.Red);
+            // Card.PrintAllCardTypes(); 
+            Random r = new();
+            List<int> list1 = new List<int>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            for(int i = 0; i <= 10; i++)
+            {
+                int randomintindex = r.Next(9);
+                int randomint = list1[randomintindex];
+                Console.WriteLine($"Random Number {i}: ");
+                Console.WriteLine(randomint); 
+                Console.WriteLine(); 
+            }
+            */
 
+            Deck deck = new Deck();
+            Deck.AddNumberCardsToDeck();
+            deck.printCards(); 
         }
     }
 }
