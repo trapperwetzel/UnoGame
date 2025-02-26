@@ -19,9 +19,10 @@
             }
             */
 
-            Deck deck = new Deck();
-            Deck.AddNumberCardsToDeck();
-            deck.printCards(); 
+            Deck deck3 = new Deck();
+            deck3.AddNumberCardsToDeck();
+            deck3.AddSkipCardsToDeck();
+            deck3.printCards();
         }
     }
 }

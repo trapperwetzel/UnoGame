@@ -57,7 +57,7 @@ namespace UnoTerminal
 
         public override string ToString()
         {
-            string message = $"Card Type: {TypeOfCard}\nColor: {ColorOfCard}\nNumber: {CardNumber}";
+            string message = $"Card Type: {TypeOfCard}\nColor: {ColorOfCard}\nNumber: {CardNumber}\n";
             return message; 
         }
 

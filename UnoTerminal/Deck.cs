@@ -13,7 +13,7 @@ namespace UnoTerminal
         Random random = new(); 
 
         
-        public static List<Card> AddNumberCardsToDeck()
+        public void AddNumberCardsToDeck()
         {
             foreach(CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
             {
@@ -36,13 +36,41 @@ namespace UnoTerminal
                 }
             }
 
+        }
 
-            return deck;
-
-
+        public void AddSkipCardsToDeck()
+        {
+            int i = 0;
+            while (i < 2)
+            {
+                
+                foreach (CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
+                {
+                    Card tempcard4 = new Card(CardType.Skip, cardcolor);
+                    deck.Add(tempcard4);
+                   
+                }
+                i++;
+            }
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         public void printCards()
         {
             foreach(Card card in deck)
