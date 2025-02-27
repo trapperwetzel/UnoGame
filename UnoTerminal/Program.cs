@@ -29,10 +29,10 @@
             */
 
             
-            deck3.CreateDeck();
             
-            var deck1 = deck3.GetDeck();
-            foreach(Card card in deck1)
+            
+            var deck = deck3.CreateDeck();
+            foreach(Card card in deck)
             {
                 Console.WriteLine("---------------");
                 Console.WriteLine(card);

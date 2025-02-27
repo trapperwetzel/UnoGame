@@ -26,8 +26,8 @@ namespace UnoTerminal
     }
 
     
-    public class Card
-    {
+    public class Card {
+
         public CardType TypeOfCard { get; private set; }
         public CardColor? ColorOfCard { get; private set; }
         public int? CardNumber { get; private set; }

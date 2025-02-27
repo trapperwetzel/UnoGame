@@ -6,26 +6,28 @@ using System.Threading.Tasks;
 
 namespace UnoTerminal
 {
-    public class Deck
-    {
-        public static List<Card> deck =  new List<Card>(); // Place holder before we make the initalize deck method 
+    public class Deck {
+
+        public static List<Card> GameDeck = new List<Card>(); // Place holder before we make the initalize deck method 
         
         Random random = new(); 
 
 
-
+        /*
         public List<Card> GetDeck()
         {
             return deck;          
         }
+        */
         // Combines all the methods into a CreateDeck() for ease of use + encapsulation
-        public void CreateDeck()
+        public List<Card> CreateDeck()
         {
             AddNumberCardsToDeck();
             AddSkipCardsToDeck();
             AddDrawTwoToDeck();
             AddReverseToDeck();
             AddWildCardsToDeck();
+            return GameDeck;
         }
 
 
@@ -50,13 +52,13 @@ namespace UnoTerminal
                     {
                         Card tempCard = new Card(CardType.Number, cardcolor, i);
                         Card tempCard2 = new Card(CardType.Number, cardcolor, i);
-                        deck.Add(tempCard);
-                        deck.Add(tempCard2);
+                        GameDeck.Add(tempCard);
+                        GameDeck.Add(tempCard2);
                     }
                     else
                     {
                         Card zeroCard = new Card(CardType.Number, cardcolor, i);
-                        deck.Add(zeroCard);
+                        GameDeck.Add(zeroCard);
                     }
                     
                 }
@@ -75,7 +77,7 @@ namespace UnoTerminal
                 foreach (CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
                 {
                     Card tempcard4 = new Card(CardType.Skip, cardcolor);
-                    deck.Add(tempcard4);
+                    GameDeck.Add(tempcard4);
                    
                 }
                 i++;
@@ -92,7 +94,7 @@ namespace UnoTerminal
                 foreach(CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
                 {
                     Card tempcard5 = new Card(CardType.DrawTwo, cardcolor);
-                    deck.Add(tempcard5);
+                    GameDeck.Add(tempcard5);
                 }
                 i++;
             }
@@ -108,7 +110,7 @@ namespace UnoTerminal
                 foreach(CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
                 {
                     Card tempcard6 = new Card(CardType.Reverse, cardcolor);
-                    deck.Add(tempcard6);
+                    GameDeck.Add(tempcard6);
                 }
                 i++;
             }
@@ -122,8 +124,8 @@ namespace UnoTerminal
             {
                 Card tempcard7 = new Card(CardType.Wild);
                 Card tempcard8 = new Card(CardType.DrawFour);
-                deck.Add(tempcard7);
-                deck.Add(tempcard8);
+                GameDeck.Add(tempcard7);
+                GameDeck.Add(tempcard8);
                 i++;
             }
             
@@ -145,7 +147,7 @@ namespace UnoTerminal
         
         public void printCards()
         {
-            foreach(Card card in deck)
+            foreach(Card card in GameDeck)
             {
                 Console.WriteLine(card.ToString());
                 Console.WriteLine();
