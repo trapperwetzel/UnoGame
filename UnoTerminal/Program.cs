@@ -20,9 +20,26 @@
             */
 
             Deck deck3 = new Deck();
+            /*
             deck3.AddNumberCardsToDeck();
             deck3.AddSkipCardsToDeck();
-            deck3.printCards();
+            deck3.AddDrawTwoToDeck();
+            deck3.AddReverseToDeck();
+            deck3.AddWildCardsToDeck();
+            */
+
+            
+            deck3.CreateDeck();
+            
+            var deck1 = deck3.GetDeck();
+            foreach(Card card in deck1)
+            {
+                Console.WriteLine("---------------");
+                Console.WriteLine(card);
+                
+            }
+            
+            
         }
     }
 }

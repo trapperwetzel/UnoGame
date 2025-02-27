@@ -12,8 +12,34 @@ namespace UnoTerminal
         
         Random random = new(); 
 
-        
-        public void AddNumberCardsToDeck()
+
+
+        public List<Card> GetDeck()
+        {
+            return deck;          
+        }
+        // Combines all the methods into a CreateDeck() for ease of use + encapsulation
+        public void CreateDeck()
+        {
+            AddNumberCardsToDeck();
+            AddSkipCardsToDeck();
+            AddDrawTwoToDeck();
+            AddReverseToDeck();
+            AddWildCardsToDeck();
+        }
+
+
+
+
+
+
+
+
+        // Adds all the numbered cards to the deck. 
+        // There is only **1** Zero for each color.
+        // The rest of the numbers (1-9) will be in each color twice.
+        // Example: Red Color has (0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9) 
+        private void AddNumberCardsToDeck()
         {
             foreach(CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
             {
@@ -38,7 +64,9 @@ namespace UnoTerminal
 
         }
 
-        public void AddSkipCardsToDeck()
+        // Adds the skip cards to the deck
+        // Each color gets two skips.
+        private void AddSkipCardsToDeck()
         {
             int i = 0;
             while (i < 2)
@@ -54,8 +82,52 @@ namespace UnoTerminal
             }
         }
 
+        // Adds the "Draw 2" cards to the deck
+        // Each color gets two Draw 2's. 
+        private void AddDrawTwoToDeck()
+        {
+            int i = 0;
+            while( i < 2)
+            {
+                foreach(CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
+                {
+                    Card tempcard5 = new Card(CardType.DrawTwo, cardcolor);
+                    deck.Add(tempcard5);
+                }
+                i++;
+            }
+        }
 
+        // Adds the reverse cards to the deck. 
+        // Each color gets two reverse cards.
+        private void AddReverseToDeck()
+        {
+            int i = 0;
+            while( i < 2)
+            {
+                foreach(CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
+                {
+                    Card tempcard6 = new Card(CardType.Reverse, cardcolor);
+                    deck.Add(tempcard6);
+                }
+                i++;
+            }
+        }
 
+        // Adds the "Wild Card" and the "DrawFour Wild Card" to the deck. 
+        private void AddWildCardsToDeck()
+        {
+            int i = 0;
+            while(i < 4)
+            {
+                Card tempcard7 = new Card(CardType.Wild);
+                Card tempcard8 = new Card(CardType.DrawFour);
+                deck.Add(tempcard7);
+                deck.Add(tempcard8);
+                i++;
+            }
+            
+        }
 
 
 

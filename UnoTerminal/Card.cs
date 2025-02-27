@@ -29,10 +29,13 @@ namespace UnoTerminal
     public class Card
     {
         public CardType TypeOfCard { get; private set; }
-        public CardColor ColorOfCard { get; private set; }
-        public int CardNumber { get; private set; }
+        public CardColor? ColorOfCard { get; private set; }
+        public int? CardNumber { get; private set; }
 
-        
+        public Card(CardType typeOfCard)
+        {
+            TypeOfCard = typeOfCard;
+        }
         public Card(CardType typeOfCard, CardColor colorOfCard)
         {
             TypeOfCard = typeOfCard;
@@ -57,8 +60,24 @@ namespace UnoTerminal
 
         public override string ToString()
         {
-            string message = $"Card Type: {TypeOfCard}\nColor: {ColorOfCard}\nNumber: {CardNumber}\n";
-            return message; 
+            
+            if(TypeOfCard == CardType.Number)
+            {
+                string message = $"Card Type: {TypeOfCard}\nColor: {ColorOfCard}\nNumber: {CardNumber}";
+                return message;
+            }
+            else if(TypeOfCard == CardType.Wild || TypeOfCard == CardType.DrawFour)
+            {
+                string message = $"Card Type: {TypeOfCard}";
+                return message;
+            }
+            else
+            {
+                string message = $"Card Type: {TypeOfCard}\nColor: {ColorOfCard}";
+                return message;
+            }
+            
+            
         }
 
 
