@@ -7,8 +7,12 @@ using System.Threading.Tasks;
 namespace UnoTerminal {
     public class Game {
 
+        // private static Deck d = new();
+        private Stack<Card> gamedeck = Deck.CreateDeck();
+
         private Player player1 = new();
         private Player player2 = new();
+        Random random = new();
 
         public Player Player1
         {
@@ -20,13 +24,13 @@ namespace UnoTerminal {
             get { return player2; }
             set { player2 = value; }
         }
-
-        public void AddCard()
+        public Stack<Card> GameDeck
         {
-            
+            get { return gamedeck; }
+            set { gamedeck = value; }
         }
-        
 
     }
 }
+
 

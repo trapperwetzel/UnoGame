@@ -8,30 +8,46 @@ namespace UnoTerminal
 {
     public class Deck {
 
+        public Stack<Card> ActualDeck = new Stack<Card>(); // Make private and do gets and sets.
         public static List<Card> GameDeck = new List<Card>(); // Place holder before we make the initalize deck method 
-        
+        public static Deck deck1 = new Deck();
         Random random = new(); 
 
 
-        /*
-        public List<Card> GetDeck()
-        {
-            return deck;          
-        }
-        */
+        
+        
+
+        
+
         // Combines all the methods into a CreateDeck() for ease of use + encapsulation
-        public List<Card> CreateDeck()
+        public static Stack<Card> CreateDeck()
         {
-            AddNumberCardsToDeck();
-            AddSkipCardsToDeck();
-            AddDrawTwoToDeck();
-            AddReverseToDeck();
-            AddWildCardsToDeck();
-            return GameDeck;
+            deck1.AddNumberCardsToDeck();
+            deck1.AddSkipCardsToDeck();
+            deck1.AddDrawTwoToDeck();
+            deck1.AddReverseToDeck();
+            deck1.AddWildCardsToDeck();
+            deck1.Shuffle();
+            var ActualDeck = new Stack<Card>(GameDeck);
+
+            return ActualDeck;
         }
 
+        public void Shuffle()
+        {
 
+            int lastIndex = GameDeck.Count - 1;
+            while (lastIndex > 0)
+            {
+                Card temp = GameDeck[lastIndex];
+                int randomIndex = random.Next(0, lastIndex);
 
+                GameDeck[lastIndex] = GameDeck[randomIndex];
+
+                GameDeck[randomIndex] = temp;
+                lastIndex--;
+            }
+        }
 
 
 

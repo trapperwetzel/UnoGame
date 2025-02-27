@@ -1,9 +1,18 @@
-﻿namespace UnoTerminal
-{
+﻿
+
+
+
+namespace UnoTerminal {
+    using Microsoft.Extensions.Logging;
+    using System.Net.NetworkInformation;
     internal class Program
     {
+
         static void Main(string[] args)
         {
+            
+            
+
             /*
             Card Card1 = new Card(CardType.Number, CardColor.Red);
             // Card.PrintAllCardTypes(); 
@@ -19,7 +28,7 @@
             }
             */
 
-            Deck deck3 = new Deck();
+
             /*
             deck3.AddNumberCardsToDeck();
             deck3.AddSkipCardsToDeck();
@@ -28,18 +37,45 @@
             deck3.AddWildCardsToDeck();
             */
 
-            
-            
-            
-            var deck = deck3.CreateDeck();
+
+
+            /*
+            var deck = Deck.CreateDeck();
             foreach(Card card in deck)
             {
                 Console.WriteLine("---------------");
                 Console.WriteLine(card);
                 
             }
+            */
+            /*
+            Game game = new Game();
+            var deck11 = game.ListDeck;
+
+            foreach(Card card in deck11)
+            {
+                Console.WriteLine("---------------");
+                Console.WriteLine(card);
+            }
+            */
+
+
+
+            Game game = new Game();
             
+            var deck11 = game.GameDeck;
+            Console.WriteLine(deck11);
+            int i = 1;
+            foreach(Card card in deck11)
+            {
+                
+                Console.WriteLine(i);
+                Console.WriteLine(card);
+                i++;
+            }
             
+
+
         }
     }
 }
