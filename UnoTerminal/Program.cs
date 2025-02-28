@@ -61,10 +61,12 @@ namespace UnoTerminal {
 
 
 
-            Game game = new Game();
-            
-            var deck11 = game.GameDeck;
-            Console.WriteLine(deck11);
+            GamePlay game = new ();
+
+            var deck11 = GamePlay.GameDeck;
+
+
+            /*
             int i = 1;
             foreach(Card card in deck11)
             {
@@ -73,8 +75,32 @@ namespace UnoTerminal {
                 Console.WriteLine(card);
                 i++;
             }
+            */
             
+            game.CreateHands();
+            Console.WriteLine("Player 1 Deck\n----------------");
+            foreach(Card card in game.Player1.Hand)
+            {
+                Console.WriteLine();
+                Console.WriteLine(card);
+            }
 
+            
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Player 2 Deck\n----------------");
+            foreach(Card card in game.Player2.Hand)
+            {
+                
+                Console.WriteLine();
+                Console.WriteLine(card);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("-------------------------------------------");
+            Console.WriteLine();
+            game.DisplayCurrentCard();
 
         }
     }

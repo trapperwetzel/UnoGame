@@ -32,6 +32,11 @@ namespace UnoTerminal
         public CardColor? ColorOfCard { get; private set; }
         public int? CardNumber { get; private set; }
 
+        
+        public Card()
+        {
+
+        }
         public Card(CardType typeOfCard)
         {
             TypeOfCard = typeOfCard;
