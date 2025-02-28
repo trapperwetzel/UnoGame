@@ -101,6 +101,8 @@ namespace UnoTerminal {
             Console.WriteLine("-------------------------------------------");
             Console.WriteLine();
             game.DisplayCurrentCard();
+            Console.WriteLine();
+            game.DisplayInfo();
 
         }
     }

@@ -32,9 +32,19 @@ namespace UnoTerminal
         {
             Hand.Add(aCard);
         }
-        public List<Card> ViewHand()
+
+        public List<Card> GetHand()
         {
-            return Hand;
+            return this.Hand;
+        }
+        public void ViewHand()
+        {
+            foreach(Card card in Hand)
+            {
+                Console.WriteLine("----------");
+                Console.WriteLine(card);
+                
+            }
         }
 
         // Can make a class that is the game manager basically 

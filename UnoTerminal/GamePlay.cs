@@ -54,6 +54,7 @@ namespace UnoTerminal {
         // Methods
         public void DisplayCurrentCard()
         {
+            Console.WriteLine("Current Card\n");
             Console.WriteLine(CurrentCard);
         }
 
@@ -61,7 +62,9 @@ namespace UnoTerminal {
         {
             if (PlayerTurn.Trim().ToLower() == "player1")
             {
-
+                string message = "(Your Hand)\n----------------------------------------\n";
+                Console.WriteLine(message);
+                Player1.ViewHand();
             } 
         }
         public void CreateHands()

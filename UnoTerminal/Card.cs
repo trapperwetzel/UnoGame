@@ -68,17 +68,17 @@ namespace UnoTerminal
             
             if(TypeOfCard == CardType.Number)
             {
-                string message = $"Card Type: {TypeOfCard}\nColor: {ColorOfCard}\nNumber: {CardNumber}";
+                string message = $"Type: {TypeOfCard}\nColor: {ColorOfCard}\nNumber: {CardNumber}";
                 return message;
             }
             else if(TypeOfCard == CardType.Wild || TypeOfCard == CardType.DrawFour)
             {
-                string message = $"Card Type: {TypeOfCard}";
+                string message = $"Type: {TypeOfCard}";
                 return message;
             }
             else
             {
-                string message = $"Card Type: {TypeOfCard}\nColor: {ColorOfCard}";
+                string message = $"Type: {TypeOfCard}\nColor: {ColorOfCard}";
                 return message;
             }
             
