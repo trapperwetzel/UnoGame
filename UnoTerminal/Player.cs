@@ -24,6 +24,7 @@ namespace UnoTerminal
             Hand = aHand;
         }
 
+
         public void PlayCard(Card aCard)
         {
             Hand.Remove(aCard);
@@ -39,9 +40,11 @@ namespace UnoTerminal
         }
         public void ViewHand()
         {
-            foreach(Card card in Hand)
+            Console.WriteLine("--Your Hand--\n");
+            foreach (Card card in Hand)
             {
-                Console.WriteLine("----------");
+                
+                Console.WriteLine("---------------");
                 Console.WriteLine(card);
                 
             }

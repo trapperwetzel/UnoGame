@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace UnoTerminal {
     public class GamePlay {
 
-        //private static GamePlay game = new();
+        
         private static Stack<Card> gamedeck = Deck.CreateDeck();
         private Card currentcard = new();
-        private string playerturn = "";
+        private Player currentplayer = new();
         private Player player1 = new();
         private Player player2 = new();
         Random random = new();
@@ -20,10 +20,10 @@ namespace UnoTerminal {
             get { return this.currentcard; }
             set { this.currentcard = value; }
         }
-        public string PlayerTurn
+        public Player CurrentPlayer
         {
-            get { return this.playerturn; }
-            set { this.playerturn = value; }
+            get { return this.currentplayer; }
+            set { this.currentplayer = value; }
         }
         public Player Player1 {
             get { return player1; }
@@ -39,19 +39,68 @@ namespace UnoTerminal {
         }
 
         // constructors 
-        
-        public GamePlay():this(GameDeck.Pop(),"player1")
-        {
 
+        public GamePlay() : this(GameDeck.Pop(), new Player())
+        {
+            Player1 = new Player();
+            Player2 = new Player();
+            CurrentPlayer = Player1;
+            
         }
-        public GamePlay(Card aCurrentCard, string aPlayerTurn)
+        public GamePlay(Card aCurrentCard, Player aCurrentPlayer)
         {
             CurrentCard = aCurrentCard;
-            PlayerTurn = aPlayerTurn;
+            CurrentPlayer = aCurrentPlayer;
+
         }
 
 
         // Methods
+
+
+        public void PlayTurn()
+        {
+            Card tempcard = new();
+            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine("Enter in the place in hand of the card to play it.\nOr type 0 to Draw Card.");
+            Console.WriteLine("--------------------------------------------------");
+
+            
+
+            int userInput = int.Parse(Console.ReadLine());
+            
+            foreach (Card card in CurrentPlayer.Hand)
+            {
+                
+                if (card.PlaceInHand == userInput)
+                {
+                    tempcard = card;
+                    Console.WriteLine();
+                    Console.WriteLine("Testing!\n\n");
+                    Console.WriteLine("temp card below\n");
+                    Console.WriteLine(tempcard);
+                    Console.WriteLine();
+                    // Checks if the card number or the color of the card is the same; 
+                    // If either is true, we know we can play the card. 
+                    if (tempcard.CardNumber == CurrentCard.CardNumber || tempcard.ColorOfCard == CurrentCard.ColorOfCard)
+                    {
+                        Console.WriteLine("Testing: This Works!");
+                    } // The else if will check for the wild card situations. Checking if the type of the card is the same and that card number is null.
+                    else if (tempcard.TypeOfCard == card.TypeOfCard)
+                    {
+                        if(tempcard.CardNumber == null & tempcard.CardNumber == null)
+                        {
+
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+
+
         public void DisplayCurrentCard()
         {
             Console.WriteLine("Current Card\n");
@@ -60,12 +109,14 @@ namespace UnoTerminal {
 
         public void DisplayInfo()
         {
-            if (PlayerTurn.Trim().ToLower() == "player1")
+            if (CurrentPlayer == Player1)
             {
-                string message = "(Your Hand)\n----------------------------------------\n";
-                Console.WriteLine(message);
                 Player1.ViewHand();
-            } 
+            }
+            else
+            {
+                Player2.ViewHand();
+            }
         }
         public void CreateHands()
         {
@@ -73,6 +124,8 @@ namespace UnoTerminal {
             {
                 Card temp1 = GameDeck.Pop();
                 Card temp2 = GameDeck.Pop();
+                temp1.PlaceInHand = i + 1;
+                temp2.PlaceInHand = i + 1;
                 Player1.Hand.Add(temp1);
                 Player2.Hand.Add(temp2);
             }

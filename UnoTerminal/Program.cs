@@ -103,6 +103,7 @@ namespace UnoTerminal {
             game.DisplayCurrentCard();
             Console.WriteLine();
             game.DisplayInfo();
+            game.PlayTurn();
 
         }
     }

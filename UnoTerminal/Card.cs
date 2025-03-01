@@ -32,6 +32,7 @@ namespace UnoTerminal
         public CardColor? ColorOfCard { get; private set; }
         public int? CardNumber { get; private set; }
 
+        public int? PlaceInHand { get; set; }
         
         public Card()
         {
@@ -69,16 +70,19 @@ namespace UnoTerminal
             if(TypeOfCard == CardType.Number)
             {
                 string message = $"Type: {TypeOfCard}\nColor: {ColorOfCard}\nNumber: {CardNumber}";
+                message += $"\nPlace In Hand: {PlaceInHand}";
                 return message;
             }
             else if(TypeOfCard == CardType.Wild || TypeOfCard == CardType.DrawFour)
             {
                 string message = $"Type: {TypeOfCard}";
+                message += $"\nPlace In Hand: {PlaceInHand}";
                 return message;
             }
             else
             {
                 string message = $"Type: {TypeOfCard}\nColor: {ColorOfCard}";
+                message += $"\nPlace In Hand: {PlaceInHand}";
                 return message;
             }
             
