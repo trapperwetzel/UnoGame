@@ -78,24 +78,8 @@ namespace UnoTerminal {
             */
             
             game.CreateHands();
-            Console.WriteLine("Player 1 Deck\n----------------");
-            foreach(Card card in game.Player1.Hand)
-            {
-                Console.WriteLine();
-                Console.WriteLine(card);
-            }
-
-            
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("Player 2 Deck\n----------------");
-            foreach(Card card in game.Player2.Hand)
-            {
-                
-                Console.WriteLine();
-                Console.WriteLine(card);
-            }
-
+            game.PlayGame();
+            /*
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("-------------------------------------------");
@@ -104,6 +88,7 @@ namespace UnoTerminal {
             Console.WriteLine();
             game.DisplayInfo();
             game.PlayTurn();
+            */
 
         }
     }

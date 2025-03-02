@@ -62,11 +62,21 @@ namespace UnoTerminal {
 
         // Methods
 
-
+        public void PlayGame()
+        {
+            while(GameDeck.Count != 0)
+            {
+                PlayTurn();
+            }
+        }
         public void PlayTurn()
         {
             // create a temp new card that will become the card that the user selects.
             Card tempcard = new();
+            Console.WriteLine("Current Card: ");
+            DisplayCurrentCard();
+            Console.WriteLine("Your Deck: \n\n\n");
+            DisplayInfo();
             Console.WriteLine("--------------------------------------------------");
             Console.WriteLine("Enter in the place in hand of the card to play it.\nOr type 0 to Draw Card.");
             Console.WriteLine("--------------------------------------------------");
@@ -99,14 +109,21 @@ namespace UnoTerminal {
                         
                         
                         
-                        //CurrentCard = FinishedCard;
+                        
                         Console.WriteLine();
                         Console.WriteLine("Your new hand!\n\n");
                         
                         Console.WriteLine("Your new current card!\n\n");
                         
+
+
+
+
                         Console.WriteLine(CurrentCard.ToString());
                         
+                        
+                        SwitchPlayer();
+                        CurrentPlayer.ViewHand();
                     } 
                     // The else if will check for the wild card situations. Checking if the type of the card is the same and that card number is null.
                     else if (tempcard.TypeOfCard == card.TypeOfCard)
@@ -114,6 +131,17 @@ namespace UnoTerminal {
                         if(tempcard.CardNumber == null & tempcard.CardNumber == null)
                         {
                             Console.WriteLine("Wild Card is the same");
+                            CurrentPlayer.PlayCard(tempcard);
+                            DiscardPile.Add(tempcard);
+                            DiscardPile.Add(CurrentCard);
+                            CurrentCard = GameDeck.Pop();
+                            
+                            
+
+
+                            SwitchPlayer();
+                            CurrentPlayer.ViewHand();
+                            
 
 
                         }
@@ -123,6 +151,38 @@ namespace UnoTerminal {
 
 
         }
+
+
+        public void DrawTwo() 
+        {
+            for(int i = 0; i < 2; i++)
+            {
+                Card tempcard = GameDeck.Pop();
+                CurrentPlayer.AddToHand(tempcard);
+                Console.WriteLine("Drawing two cards!");
+            }
+        }
+        public void DrawFour()
+        {
+            for(int i = 0; i < 4; i++)
+            {
+                Card tempcard = GameDeck.Pop();
+                CurrentPlayer.AddToHand(tempcard);
+                Console.WriteLine("Drawing four cards!");
+            }
+        }
+        public void SwitchPlayer()
+        {
+            if(CurrentPlayer == Player1)
+            {
+                CurrentPlayer = Player2;
+            }
+            else if(CurrentPlayer == Player2)
+            {
+                CurrentPlayer = Player1;
+            }
+        }
+
 
 
 
@@ -145,7 +205,7 @@ namespace UnoTerminal {
         }
         public void CreateHands()
         {
-            for(int i = 0; i < 10; i++)
+            for(int i = 0; i < 7; i++)
             {
                 Card temp1 = GameDeck.Pop();
                 Card temp2 = GameDeck.Pop();
