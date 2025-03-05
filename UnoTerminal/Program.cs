@@ -61,9 +61,9 @@ namespace UnoTerminal {
 
 
 
-            GamePlay game = new ();
+            GamePlay game1 = new ();
 
-            var deck11 = GamePlay.GameDeck;
+            var deck12 = GamePlay.GameDeck;
 
 
             /*
@@ -77,8 +77,9 @@ namespace UnoTerminal {
             }
             */
             
-            game.CreateHands();
-            game.PlayGame();
+            game1.CreateHands();
+            
+            game1.PlayGame();
             /*
             Console.WriteLine();
             Console.WriteLine();

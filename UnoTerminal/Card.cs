@@ -26,69 +26,113 @@ namespace UnoTerminal
     }
 
     
-    public class Card {
+    public abstract class Card {
 
-        public CardType TypeOfCard { get; private set; }
-        public CardColor? ColorOfCard { get; private set; }
-        public int? CardNumber { get; private set; }
+        public abstract CardType TypeOfCard { get; }
+        public  CardColor ColorOfCard { get; set; }
+        public int PlaceInHand { get; set; }
 
-        public int? PlaceInHand { get; set; }
         
         public Card()
         {
 
         }
-        public Card(CardType typeOfCard)
+        
+        public Card(CardColor colorOfCard)
         {
-            TypeOfCard = typeOfCard;
-        }
-        public Card(CardType typeOfCard, CardColor colorOfCard)
-        {
-            TypeOfCard = typeOfCard;
+            
             ColorOfCard = colorOfCard;
         }
-        public Card(CardType typeOfCard, CardColor colorOfCard, int cardNumber)
+
+        public Card(CardColor colorOfCard, int aPlaceInHand)
         {
-            TypeOfCard = typeOfCard;
+            
             ColorOfCard = colorOfCard;
-            CardNumber = cardNumber;
-
+            PlaceInHand = aPlaceInHand;
         }
 
-        public static void PrintAllCardTypes()
+        public virtual int? GetNumber() => null;
+
+        public  override string ToString()
         {
-            string[] CardTypeArray = Enum.GetNames(typeof(CardType));
-            foreach(string CardType in CardTypeArray) { Console.WriteLine(CardType);}
+            string message = $"Card: {ColorOfCard} {TypeOfCard}\n# In Hand: {PlaceInHand}";
+            return message;   
         }
 
+    }
 
 
+    public class NumberCard : Card
+    {
+        public override CardType TypeOfCard => CardType.Number;
+        public int Number { get; set; }
+
+        public NumberCard(CardColor colorOfCard, int aNumber)
+        {
+            
+            ColorOfCard = colorOfCard;
+            Number = aNumber;
+        }
+
+        public override int? GetNumber() => Number;
 
         public override string ToString()
         {
-            
-            if(TypeOfCard == CardType.Number)
-            {
-                string message = $"Type: {TypeOfCard}\nColor: {ColorOfCard}\nNumber: {CardNumber}";
-                message += $"\nPlace In Hand: {PlaceInHand}";
-                return message;
-            }
-            else if(TypeOfCard == CardType.Wild || TypeOfCard == CardType.DrawFour)
-            {
-                string message = $"Type: {TypeOfCard}";
-                message += $"\nPlace In Hand: {PlaceInHand}";
-                return message;
-            }
-            else
-            {
-                string message = $"Type: {TypeOfCard}\nColor: {ColorOfCard}";
-                message += $"\nPlace In Hand: {PlaceInHand}";
-                return message;
-            }
-            
-            
+            string message = $"Card: {ColorOfCard} ({Number})\n# In Hand: {PlaceInHand}";
+            return message;
         }
 
 
     }
+
+    public class SkipCard : Card
+    {
+        public override CardType TypeOfCard => CardType.Skip;
+
+        public SkipCard(CardColor colorOfCard)
+        {
+            ColorOfCard = colorOfCard;
+        }
+
+    }
+
+    public class ReverseCard : Card
+    {
+        public override CardType TypeOfCard => CardType.Reverse;
+
+        public ReverseCard(CardColor colorOfCard)
+        {
+            ColorOfCard = colorOfCard;
+        }
+    }
+
+    public class WildCard : Card
+    {
+        public override CardType TypeOfCard => CardType.Wild;
+
+        public override string ToString()
+        {
+            return $"Card: {TypeOfCard}\n# In Hand: {PlaceInHand}";
+        }
+    }
+
+
+    public class DrawTwoCard : Card
+    {
+        public override CardType TypeOfCard => CardType.DrawTwo;
+
+        public DrawTwoCard(CardColor colorOfCard)
+        {
+            ColorOfCard = colorOfCard;
+        }
+    }
+
+    public class DrawFourCard : WildCard
+    {
+        public override CardType TypeOfCard => CardType.DrawFour;
+
+        
+    }
+
+
 }

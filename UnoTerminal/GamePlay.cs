@@ -3,23 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+// Trapper W 3/4/2025
 namespace UnoTerminal {
     public class GamePlay {
 
         
         private static Stack<Card> gamedeck = Deck.CreateDeck();
         private static List<Card> discardpile = new();
-        private Card currentcard = new();
+        private Card currentcard = GameDeck.Peek();
+        private CardColor currentcardcolor;
         private Player currentplayer = new();
-        private Player player1 = new();
-        private Player player2 = new();
+        private Player player1 = new Player("Player 1");
+        private Player player2 = new Player("Player 2");
         Random random = new();
 
         // gets and sets
         public Card CurrentCard {
             get { return this.currentcard; }
             set { this.currentcard = value; }
+        }
+        
+        public CardColor CurrentCardColor
+        {
+            get { return currentcardcolor; }
+            set { currentcardcolor = value; }
         }
         public Player CurrentPlayer
         {
@@ -45,16 +52,17 @@ namespace UnoTerminal {
         }
         // constructors 
 
-        public GamePlay() : this(GameDeck.Pop(), new Player())
+        public GamePlay() : this(GameDeck.Pop(),new CardColor(), new Player())
         {
-            Player1 = new Player();
-            Player2 = new Player();
+            
             CurrentPlayer = Player1;
+            CurrentCardColor = (CardColor)CurrentCard.ColorOfCard;
             
         }
-        public GamePlay(Card aCurrentCard, Player aCurrentPlayer)
+        public GamePlay(Card aCurrentCard,CardColor aCardColor, Player aCurrentPlayer)
         {
             CurrentCard = aCurrentCard;
+            CurrentCardColor = aCardColor;
             CurrentPlayer = aCurrentPlayer;
 
         }
@@ -64,18 +72,27 @@ namespace UnoTerminal {
 
         public void PlayGame()
         {
-            while(GameDeck.Count != 0)
+            bool game = true;
+            while (game != false)
             {
                 PlayTurn();
+                if (Player1.Hand.Count == 0 || Player2.Hand.Count == 0)
+                {
+                    game = false;
+                    Console.Clear();
+                    Console.WriteLine("Game Over!");
+                    Console.WriteLine();
+                }
             }
+            
         }
         public void PlayTurn()
         {
             // create a temp new card that will become the card that the user selects.
-            Card tempcard = new();
-            Console.WriteLine("Current Card: ");
+            
+            
             DisplayCurrentCard();
-            Console.WriteLine("Your Deck: \n\n\n");
+            Console.WriteLine("------------------------------------------------------\n\n");
             DisplayInfo();
             Console.WriteLine("--------------------------------------------------");
             Console.WriteLine("Enter in the place in hand of the card to play it.\nOr type 0 to Draw Card.");
@@ -84,100 +101,206 @@ namespace UnoTerminal {
             
 
             int userInput = int.Parse(Console.ReadLine());
-            
-            foreach (Card card in CurrentPlayer.Hand.ToList())
+
+            if (userInput == 0)
             {
-                
-                if (card.PlaceInHand == userInput)
+
+                DrawCard();
+                SwitchPlayer();
+            }
+
+            
+
+            else {
+                foreach (Card card in CurrentPlayer.Hand.ToList())
                 {
-                    tempcard = card;
-                    Console.WriteLine();
-                    //Console.WriteLine("Testing!\n\n");
-                    //Console.WriteLine("temp card below\n");
-                    //Console.WriteLine(tempcard);
-                    Console.WriteLine();
-                    // Checks if the card number or the color of the card is the same; 
-                    // If either is true, we know we can play the card. 
-                    if (tempcard.CardNumber == CurrentCard.CardNumber || tempcard.ColorOfCard == CurrentCard.ColorOfCard)
+
+                    if (card.PlaceInHand == userInput)
                     {
-                        Console.WriteLine("Testing: This Works!");
-                        CurrentPlayer.PlayCard(tempcard);
-                        DiscardPile.Add(tempcard);
-                        DiscardPile.Add(CurrentCard);
-                        CurrentCard = GameDeck.Pop();
-                        Console.WriteLine(CurrentCard.ToString());
-                        
-                        
-                        
-                        
-                        Console.WriteLine();
-                        Console.WriteLine("Your new hand!\n\n");
-                        
-                        Console.WriteLine("Your new current card!\n\n");
-                        
 
-
-
-
-                        Console.WriteLine(CurrentCard.ToString());
-                        
-                        
-                        SwitchPlayer();
-                        CurrentPlayer.ViewHand();
-                    } 
-                    // The else if will check for the wild card situations. Checking if the type of the card is the same and that card number is null.
-                    else if (tempcard.TypeOfCard == card.TypeOfCard)
-                    {
-                        if(tempcard.CardNumber == null & tempcard.CardNumber == null)
+                        Card tempcard = card;
+                        if(tempcard.ColorOfCard == CurrentCardColor)
                         {
-                            Console.WriteLine("Wild Card is the same");
-                            CurrentPlayer.PlayCard(tempcard);
-                            DiscardPile.Add(tempcard);
-                            DiscardPile.Add(CurrentCard);
-                            CurrentCard = GameDeck.Pop();
-                            
-                            
-
-
+                            Console.Clear();
+                            PlayCard(CurrentCard, tempcard);
                             SwitchPlayer();
-                            CurrentPlayer.ViewHand();
-                            
-
-
+                            break;
                         }
+                        Console.WriteLine();
+                        
+                        switch(tempcard.TypeOfCard)
+                        {
+                            case CardType.Wild:
+                                Console.Clear();
+                                ChooseColor();
+                                SwitchPlayer();
+                            break;
+
+                            case CardType.DrawTwo:
+                                Console.Clear();
+                                PlayCard(CurrentCard,tempcard);
+                                DrawTwo();
+                                
+                                SwitchPlayer();
+                            break;
+
+                            case CardType.DrawFour:
+                                Console.Clear();
+                                PlayCard(CurrentCard, tempcard);
+                                DrawFour();
+                                ChooseColor();
+                                SwitchPlayer();
+                            break;
+
+                            case CardType.Skip:
+                                Console.Clear();
+                                PlayCard(CurrentCard, tempcard);
+                                SwitchPlayer();
+                            break;
+                            case CardType.Reverse:
+                                Console.Clear();
+                                PlayCard(CurrentCard, tempcard);
+                                SwitchPlayer();
+                            break;
+
+                        }   
+                        
+
+                        // Checks if the card number or the color of the card is the same; // If either is true, we know we can play the card.
+                        if (tempcard.TypeOfCard == CardType.Number) 
+                        { 
+                            if (tempcard.GetNumber() == CurrentCard.GetNumber() || tempcard.ColorOfCard == CurrentCard.ColorOfCard)
+                            {
+                                Console.Clear();
+                                Console.WriteLine("Testing: This Works!");
+                                PlayCard(CurrentCard, tempcard);
+                                SwitchPlayer();
+                                break;
+                            }
+                        }
+                        
+                        
                     }
                 }
             }
 
+            
+
 
         }
 
 
+
+
+
+        public void ChooseColor()
+        {
+            Console.WriteLine("Enter Color (Red, Blue, Green, Yellow):");
+            string choosenColor = Console.ReadLine();
+            
+            foreach(CardColor color in Enum.GetValues(typeof(CardColor)))
+            {
+               string tempColor = color.ToString();
+                if(choosenColor == tempColor)
+                {
+                    CurrentCardColor = color;
+                }
+            }
+
+            
+            
+            
+        }
+
+        public void PlayCard(Card current, Card temp)
+        {
+            // Remove the played card from hand and add the previous current card, and the new current card to the discard pile. Then make the played card the new current card.
+            CurrentPlayer.RemoveFromHand(temp);
+            DiscardPile.Add(temp);
+            DiscardPile.Add(current);
+            CurrentCard = temp;
+            CurrentCardColor = CurrentCard.ColorOfCard;
+
+        }
+        public void DrawCard()
+        {
+            Console.Clear();
+            Console.WriteLine("Drawing Card\n\n\n\n");
+            Card tempcard = GameDeck.Pop();
+            tempcard.PlaceInHand = GetPlaceInHand(CurrentPlayer);
+            CurrentPlayer.AddToHand(tempcard);
+            
+            
+            
+        }
+
         public void DrawTwo() 
         {
-            for(int i = 0; i < 2; i++)
+            if (CurrentPlayer == Player1)
             {
-                Card tempcard = GameDeck.Pop();
-                CurrentPlayer.AddToHand(tempcard);
-                Console.WriteLine("Drawing two cards!");
+                Console.WriteLine("Drawing Two Cards!");
+                for (int i = 0; i < 2; i++)
+                {
+                    Card tempcard = GameDeck.Pop();
+                    tempcard.PlaceInHand = GetPlaceInHand(Player2);
+                    Player2.AddToHand(tempcard);
+
+                }
+            }
+
+
+            else
+            {
+                Console.WriteLine("Drawing Two Cards!");
+                for (int i = 0; i < 2; i++)
+                {
+                    Card tempcard = GameDeck.Pop();
+                    tempcard.PlaceInHand = GetPlaceInHand(Player1);
+                    Player1.AddToHand(tempcard);
+
+                }
             }
         }
         public void DrawFour()
         {
-            for(int i = 0; i < 4; i++)
+
+
+            if (CurrentPlayer == Player1)
             {
-                Card tempcard = GameDeck.Pop();
-                CurrentPlayer.AddToHand(tempcard);
-                Console.WriteLine("Drawing four cards!");
+                Console.WriteLine("Drawing Four Cards!");
+                for (int i = 0; i < 4; i++)
+                {
+                    Card tempcard = GameDeck.Pop();
+                    tempcard.PlaceInHand = GetPlaceInHand(Player2);
+                    Player2.AddToHand(tempcard);
+                    
+                }
             }
+
+
+            else
+            {
+                Console.WriteLine("Drawing Four Cards!");
+                for (int i = 0; i < 4; i++)
+                {
+                    Card tempcard = GameDeck.Pop();
+                    tempcard.PlaceInHand = GetPlaceInHand(Player1);
+                    Player1.AddToHand(tempcard);
+
+                }
+            }
+                
         }
+            
+        
+
         public void SwitchPlayer()
         {
             if(CurrentPlayer == Player1)
             {
                 CurrentPlayer = Player2;
             }
-            else if(CurrentPlayer == Player2)
+            else
             {
                 CurrentPlayer = Player1;
             }
@@ -188,20 +311,32 @@ namespace UnoTerminal {
 
         public void DisplayCurrentCard()
         {
-            Console.WriteLine("Current Card\n");
+            Console.WriteLine("Current Card");
             Console.WriteLine(CurrentCard);
+            Console.WriteLine("Current Color");
+            Console.WriteLine(CurrentCardColor.ToString());
         }
 
         public void DisplayInfo()
         {
             if (CurrentPlayer == Player1)
             {
+                Console.WriteLine(Player1.ToString());
                 Player1.ViewHand();
             }
             else
             {
+                Console.WriteLine(Player2.ToString());
                 Player2.ViewHand();
             }
+        }
+
+        public int GetPlaceInHand(Player aPlayer)
+        {
+            int lastCardIndex = aPlayer.Hand.Count() - 1;
+            Card lastCard = aPlayer.Hand[lastCardIndex];
+            int nextPlaceInHand = lastCard.PlaceInHand + 1;
+            return nextPlaceInHand;
         }
         public void CreateHands()
         {

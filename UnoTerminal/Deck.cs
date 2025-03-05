@@ -66,14 +66,14 @@ namespace UnoTerminal
 
                     if(i > 0)
                     {
-                        Card tempCard = new Card(CardType.Number, cardcolor, i);
-                        Card tempCard2 = new Card(CardType.Number, cardcolor, i);
+                        Card tempCard = new NumberCard(cardcolor, i);
+                        Card tempCard2 = new NumberCard(cardcolor, i);
                         GameDeck.Add(tempCard);
                         GameDeck.Add(tempCard2);
                     }
                     else
                     {
-                        Card zeroCard = new Card(CardType.Number, cardcolor, i);
+                        Card zeroCard = new NumberCard(cardcolor, i);
                         GameDeck.Add(zeroCard);
                     }
                     
@@ -92,7 +92,7 @@ namespace UnoTerminal
                 
                 foreach (CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
                 {
-                    Card tempcard4 = new Card(CardType.Skip, cardcolor);
+                    Card tempcard4 = new SkipCard(cardcolor);
                     GameDeck.Add(tempcard4);
                    
                 }
@@ -109,7 +109,7 @@ namespace UnoTerminal
             {
                 foreach(CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
                 {
-                    Card tempcard5 = new Card(CardType.DrawTwo, cardcolor);
+                    Card tempcard5 = new DrawTwoCard(cardcolor);
                     GameDeck.Add(tempcard5);
                 }
                 i++;
@@ -125,7 +125,7 @@ namespace UnoTerminal
             {
                 foreach(CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
                 {
-                    Card tempcard6 = new Card(CardType.Reverse, cardcolor);
+                    Card tempcard6 = new ReverseCard(cardcolor);
                     GameDeck.Add(tempcard6);
                 }
                 i++;
@@ -138,10 +138,11 @@ namespace UnoTerminal
             int i = 0;
             while(i < 4)
             {
-                Card tempcard7 = new Card(CardType.Wild);
-                Card tempcard8 = new Card(CardType.DrawFour);
+                Card tempcard7 = new WildCard(); 
+                Card tempcard8 = new DrawFourCard();
                 GameDeck.Add(tempcard7);
                 GameDeck.Add(tempcard8);
+               
                 i++;
             }
             

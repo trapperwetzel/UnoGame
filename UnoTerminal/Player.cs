@@ -8,7 +8,14 @@ namespace UnoTerminal
 {
     public class Player {
 
+        private string? name = "N/A";
         private List<Card> hand = new List<Card>();
+        
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
         public List<Card> Hand
         {   get { return this.hand; } 
             set { this.hand = value; }
@@ -18,14 +25,23 @@ namespace UnoTerminal
         {
 
         }
+        public Player(string aName)
+        {
+            Name = aName;
+        }
 
         public Player(List<Card> aHand)
         {
             Hand = aHand;
         }
 
+        public Player(List<Card> aHand, string aName)
+        {
+            Name = aName;
+            Hand = aHand;
+        }
 
-        public void PlayCard(Card aCard)
+        public void RemoveFromHand(Card aCard)
         {
             Hand.Remove(aCard);
         }
@@ -50,6 +66,11 @@ namespace UnoTerminal
             }
         }
 
+        public override string ToString()
+        {
+            string message = $"Player Name: {Name}";
+            return message;
+        }
         // Can make a class that is the game manager basically 
         // It uses random to add cards to a list.
         // Example: 
