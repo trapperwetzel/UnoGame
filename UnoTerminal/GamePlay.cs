@@ -117,67 +117,68 @@ namespace UnoTerminal {
 
                     if (card.PlaceInHand == userInput)
                     {
-
+                        // Sets the card that user choose to the tempcard
                         Card tempcard = card;
-                        if(tempcard.ColorOfCard == CurrentCardColor)
+                        // If the color of the card is the same as the current card, play the card.
+                        bool check = CheckIfValid(tempcard);
+                        if (check == true)
                         {
-                            Console.Clear();
-                            PlayCard(CurrentCard, tempcard);
-                            SwitchPlayer();
-                            break;
-                        }
-                        Console.WriteLine();
-                        
-                        switch(tempcard.TypeOfCard)
-                        {
-                            case CardType.Wild:
+                            Console.WriteLine();
+
+                            // Switch statement depending on the CardType of the card choosen by the user.
+                            switch (tempcard.TypeOfCard)
+                            {
+                                case CardType.Number:
+                                NumberCardTurn(tempcard);
+                                break;
+
+                                case CardType.Wild:
                                 Console.Clear();
+                                PlayCard(CurrentCard, tempcard);
                                 ChooseColor();
                                 SwitchPlayer();
-                            break;
+                                break;
 
-                            case CardType.DrawTwo:
+                                case CardType.DrawTwo:
                                 Console.Clear();
-                                PlayCard(CurrentCard,tempcard);
+                                PlayCard(CurrentCard, tempcard);
                                 DrawTwo();
-                                
                                 SwitchPlayer();
-                            break;
+                                break;
 
-                            case CardType.DrawFour:
+                                case CardType.DrawFour:
                                 Console.Clear();
                                 PlayCard(CurrentCard, tempcard);
                                 DrawFour();
                                 ChooseColor();
                                 SwitchPlayer();
-                            break;
+                                break;
 
-                            case CardType.Skip:
+                                case CardType.Skip:
                                 Console.Clear();
                                 PlayCard(CurrentCard, tempcard);
-                                SwitchPlayer();
-                            break;
-                            case CardType.Reverse:
+                                
+                                break;
+                                case CardType.Reverse:
                                 Console.Clear();
                                 PlayCard(CurrentCard, tempcard);
-                                SwitchPlayer();
-                            break;
+                                
+                                break;
 
-                        }   
+                            }
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("Wrong input, try again!");
+                        }
+
+                        Console.WriteLine();
+                        
+                        
                         
 
-                        // Checks if the card number or the color of the card is the same; // If either is true, we know we can play the card.
-                        if (tempcard.TypeOfCard == CardType.Number) 
-                        { 
-                            if (tempcard.GetNumber() == CurrentCard.GetNumber() || tempcard.ColorOfCard == CurrentCard.ColorOfCard)
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Testing: This Works!");
-                                PlayCard(CurrentCard, tempcard);
-                                SwitchPlayer();
-                                break;
-                            }
-                        }
+                        
                         
                         
                     }
@@ -191,8 +192,59 @@ namespace UnoTerminal {
 
 
 
+        
 
 
+        public bool CheckIfValid(Card tempcard)
+        {
+            if(tempcard.ColorOfCard == CurrentCardColor)
+            {
+                return true; 
+            }
+            else if(tempcard.TypeOfCard == CurrentCard.TypeOfCard && tempcard.TypeOfCard != CardType.Number)
+            {
+                return true;
+            }
+            else if(tempcard.TypeOfCard == CardType.Number && CurrentCard.TypeOfCard == CardType.Number)
+            {
+                if(tempcard.GetNumber() == CurrentCard.GetNumber())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if(tempcard.TypeOfCard == CardType.Wild || tempcard.TypeOfCard == CardType.DrawFour)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+           
+
+            
+        }
+
+        // Checks if the card number or the color of the card is the same; // If either is true, we know we can play the card.
+        public void NumberCardTurn(Card tempcard)
+        {
+            
+            
+                if (tempcard.GetNumber() == CurrentCard.GetNumber() || tempcard.ColorOfCard == CurrentCardColor)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Testing: This Works!");
+                    PlayCard(CurrentCard, tempcard);
+                    SwitchPlayer();
+
+                }
+
+            
+        }
         public void ChooseColor()
         {
             Console.WriteLine("Enter Color (Red, Blue, Green, Yellow):");
@@ -214,6 +266,7 @@ namespace UnoTerminal {
 
         public void PlayCard(Card current, Card temp)
         {
+
             // Remove the played card from hand and add the previous current card, and the new current card to the discard pile. Then make the played card the new current card.
             CurrentPlayer.RemoveFromHand(temp);
             DiscardPile.Add(temp);
