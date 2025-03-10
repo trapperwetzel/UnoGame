@@ -4,20 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnoTerminal
-{
+namespace UnoTerminal {
     public class Deck {
 
         public Stack<Card> ActualDeck = new Stack<Card>(); // Make private and do gets and sets.
         public static List<Card> GameDeck = new List<Card>(); // Place holder before we make the initalize deck method 
         public static Deck deck1 = new Deck();
-        Random random = new(); 
-
-
-        
-        
-
-        
+        Random random = new();
 
         // Combines all the methods into a CreateDeck() for ease of use + encapsulation
         public static Stack<Card> CreateDeck()
@@ -35,7 +28,6 @@ namespace UnoTerminal
 
         public void Shuffle()
         {
-
             int lastIndex = GameDeck.Count - 1;
             while (lastIndex > 0)
             {
@@ -49,37 +41,32 @@ namespace UnoTerminal
             }
         }
 
-
-
-
-
         // Adds all the numbered cards to the deck. 
         // There is only **1** Zero for each color.
         // The rest of the numbers (1-9) will be in each color twice.
         // Example: Red Color has (0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9) 
         private void AddNumberCardsToDeck()
         {
-            foreach(CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
+            foreach (CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
             {
-                for(int i = 0; i < 10; i++)
+                for (int i = 0; i < 10; i++)
                 {
-
-                    if(i > 0)
+                    if (i > 0)
                     {
-                        Card tempCard = new NumberCard(cardcolor, i);
-                        Card tempCard2 = new NumberCard(cardcolor, i);
+                        // Use factory pattern to create cards
+                        Card tempCard = CardFactory.CreateNumberCard(cardcolor, i);
+                        Card tempCard2 = CardFactory.CreateNumberCard(cardcolor, i);
                         GameDeck.Add(tempCard);
                         GameDeck.Add(tempCard2);
                     }
                     else
                     {
-                        Card zeroCard = new NumberCard(cardcolor, i);
+                        // Use factory pattern to create zero card
+                        Card zeroCard = CardFactory.CreateNumberCard(cardcolor, i);
                         GameDeck.Add(zeroCard);
                     }
-                    
                 }
             }
-
         }
 
         // Adds the skip cards to the deck
@@ -89,12 +76,11 @@ namespace UnoTerminal
             int i = 0;
             while (i < 2)
             {
-                
                 foreach (CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
                 {
-                    Card tempcard4 = new SkipCard(cardcolor);
+                    // Use factory pattern to create skip cards
+                    Card tempcard4 = CardFactory.CreateSkipCard(cardcolor);
                     GameDeck.Add(tempcard4);
-                   
                 }
                 i++;
             }
@@ -105,11 +91,12 @@ namespace UnoTerminal
         private void AddDrawTwoToDeck()
         {
             int i = 0;
-            while( i < 2)
+            while (i < 2)
             {
-                foreach(CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
+                foreach (CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
                 {
-                    Card tempcard5 = new DrawTwoCard(cardcolor);
+                    // Use factory pattern to create draw two cards
+                    Card tempcard5 = CardFactory.CreateDrawTwoCard(cardcolor);
                     GameDeck.Add(tempcard5);
                 }
                 i++;
@@ -121,11 +108,12 @@ namespace UnoTerminal
         private void AddReverseToDeck()
         {
             int i = 0;
-            while( i < 2)
+            while (i < 2)
             {
-                foreach(CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
+                foreach (CardColor cardcolor in Enum.GetValues(typeof(CardColor)))
                 {
-                    Card tempcard6 = new ReverseCard(cardcolor);
+                    // Use factory pattern to create reverse cards
+                    Card tempcard6 = CardFactory.CreateReverseCard(cardcolor);
                     GameDeck.Add(tempcard6);
                 }
                 i++;
@@ -136,44 +124,25 @@ namespace UnoTerminal
         private void AddWildCardsToDeck()
         {
             int i = 0;
-            while(i < 4)
+            while (i < 4)
             {
-                Card tempcard7 = new WildCard(); 
-                Card tempcard8 = new DrawFourCard();
+                // Use factory pattern to create wild cards
+                Card tempcard7 = CardFactory.CreateWildCard();
+                Card tempcard8 = CardFactory.CreateDrawFourCard();
                 GameDeck.Add(tempcard7);
                 GameDeck.Add(tempcard8);
-               
+
                 i++;
             }
-            
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
         public void printCards()
         {
-            foreach(Card card in GameDeck)
+            foreach (Card card in GameDeck)
             {
                 Console.WriteLine(card.ToString());
                 Console.WriteLine();
             }
         }
-
-
-
-
-
     }
 }
