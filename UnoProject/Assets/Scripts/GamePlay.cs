@@ -303,11 +303,15 @@ namespace UnoTerminal {
                 CurrentPlayer = Player1;
             }
         }
+        public Card GetPreviousCard()
+        {
+            if (DiscardPile.Count < 2) return null;
+            return DiscardPile[DiscardPile.Count - 2]; // Get the second last card
+        }
 
-        
         // Assigns a new "PlaceInHand" index to the card we're about to draw,
         // so it doesn't overlap with existing cards in the player's hand.
-        
+
         private int GetPlaceInHand(Player p)
         {
             if (p.Hand.Count == 0)

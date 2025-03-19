@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace UnoTerminal
 {
@@ -71,13 +72,30 @@ namespace UnoTerminal
             string message = $"Player Name: {Name}";
             return message;
         }
-        // Can make a class that is the game manager basically 
-        // It uses random to add cards to a list.
-        // Example: 
-        // public void CreateHand(List<Card>) 
-        // Takes in a list of cards, then it randomly takes from the Game Deck. And adds it to the players hand. 
-        // This can be done using "Random" class/method. 
-        // Work on this after you get home. 
+        // Used for stacking draw two cards
+        public void DrawCards(int count, GamePlay gamePlay)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                gamePlay.DrawCard(this);
+            }
+        }
+
+
+        public bool HasDrawTwoCard()
+        {
+            return Hand.Any(card => card.TypeOfCard == CardType.DrawTwo);
+        }
+
+        public void PlayDrawTwoCard()
+        {
+            var drawTwoCard = Hand.FirstOrDefault(card => card.TypeOfCard == CardType.DrawTwo);
+            if (drawTwoCard != null)
+            {
+                Hand.Remove(drawTwoCard);
+                Debug.Log($"{Name} played a DrawTwo!");
+            }
+        }
 
 
     }

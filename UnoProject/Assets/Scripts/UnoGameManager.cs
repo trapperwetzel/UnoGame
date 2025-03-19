@@ -7,7 +7,14 @@ public class UnoGameManager : MonoBehaviour {
     [SerializeField] private CardSpriteManager cardSpriteManager;
 
     // The main logic object from console code
-    private GamePlay gamePlay;
+    public GamePlay gamePlay;
+    private ITurnStrategy turnStrategy;
+
+    public void SetTurnStrategy(ITurnStrategy strategy)
+    {turnStrategy = strategy;}
+    public void HandleTurn()
+    {turnStrategy.HandleTurn(this);}
+
 
     void Start()
     {
@@ -15,6 +22,8 @@ public class UnoGameManager : MonoBehaviour {
         gamePlay = new GamePlay();
         // Deal 7 cards to each player
         gamePlay.CreateHands();
+
+        SetTurnStrategy(new ClassicTurnStrategy());  // Default
 
         // Display the starting hands visually
         DisplayHands();
@@ -75,6 +84,8 @@ public class UnoGameManager : MonoBehaviour {
         cardSpriteManager.CreateCard(spriteName, new Vector3(0f, 3f, 0f), Quaternion.identity);
     }
 
+
+
     // Called by our UnoCardHolder script when a card is clicked
     public void OnCardClicked(Card cardData, Player owner)
     {
@@ -100,7 +111,17 @@ public class UnoGameManager : MonoBehaviour {
         // Also re-display the new CurrentCard on top of the discard pile
         RedrawAll();
     }
+    public void SwitchToStackingMode()
+    {
+        SetTurnStrategy(new StackingTurnStrategy());
+        Debug.Log("Stacking rule enabled!");
+    }
 
+    public void SwitchToClassicMode()
+    {
+        SetTurnStrategy(new ClassicTurnStrategy());
+        Debug.Log("Classic mode enabled!");
+    }
     public void OnDrawClickedCurrentPlayer()
     {
         OnDrawCardClicked(gamePlay.CurrentPlayer);
@@ -133,6 +154,28 @@ public class UnoGameManager : MonoBehaviour {
 
         DisplayHands();
         DisplayCurrentCard();
+    }
+
+    public int GetStackedDrawCount()
+    {
+        int count = 0;
+        Card currentCard = gamePlay.CurrentCard;
+
+        // Count how many DrawTwo cards have been played consecutively
+        while (currentCard != null && currentCard.TypeOfCard == CardType.DrawTwo)
+        {
+            count += 2; // Each DrawTwo card adds +2 to the stack
+            currentCard = gamePlay.GetPreviousCard(); // Assume this method retrieves the last played card
+        }
+
+        return count;
+    }
+
+
+    public void NextPlayer()
+    {
+        gamePlay.SwitchPlayer();  // Assuming gamePlay has a method to change the current player
+        Debug.Log($"Next turn: {gamePlay.CurrentPlayer.Name}");
     }
 
     private string ConvertCardToSpriteName(Card cardData)
