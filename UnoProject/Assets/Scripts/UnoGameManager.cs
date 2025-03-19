@@ -8,12 +8,12 @@ public class UnoGameManager : MonoBehaviour {
 
     // The main logic object from console code
     public GamePlay gamePlay;
-    private ITurnStrategy turnStrategy;
+    private IGameModeStrategy gameModeStrategy;
 
-    public void SetTurnStrategy(ITurnStrategy strategy)
-    {turnStrategy = strategy;}
+    public void SetTurnStrategy(IGameModeStrategy strategy)
+    {gameModeStrategy = strategy;}
     public void HandleTurn()
-    {turnStrategy.HandleTurn(this);}
+    {gameModeStrategy.HandleTurn(this);}
 
 
     void Start()
@@ -23,17 +23,21 @@ public class UnoGameManager : MonoBehaviour {
         // Deal 7 cards to each player
         gamePlay.CreateHands();
 
-        SetTurnStrategy(new ClassicTurnStrategy());  // Default
+       // SetTurnStrategy(new ClassicTurnStrategy());  // Default
 
         // Display the starting hands visually
-        DisplayHands();
+       // DisplayHands();
         // Also display the current card
-        DisplayCurrentCard();
+        //DisplayCurrentCard();
 
         Debug.Log(gamePlay.CurrentCard);
         Debug.Log(gamePlay.CurrentPlayer);
     }
-
+    public void InitializeGame()
+    {
+        DisplayHands();
+        DisplayCurrentCard();
+    }
     private void DisplayHands()
     {
         // Clear the board 
@@ -41,38 +45,48 @@ public class UnoGameManager : MonoBehaviour {
 
         float xOffset = -5f; // Just for spacing example
         float xSpacing = 1.5f;
-        for (int i = 0; i < gamePlay.Player1.Hand.Count; i++)
+        if(gamePlay.CurrentPlayer == gamePlay.Player1)
         {
-            Card cardData = gamePlay.Player1.Hand[i];
-            // Convert the card info to a sprite name
-            string spriteName = ConvertCardToSpriteName(cardData);
-            float xPos = xOffset + i * xSpacing;
-            float yPos = 0f;
-            // Create the card at some position
-            GameObject cardGO = cardSpriteManager.CreateCard(spriteName, new Vector3(xPos, yPos, 0f), Quaternion.identity);
+            for (int i = 0; i < gamePlay.Player1.Hand.Count; i++)
+            {
+                Card cardData = gamePlay.Player1.Hand[i];
+                // Convert the card info to a sprite name
+                string spriteName = ConvertCardToSpriteName(cardData);
+                float xPos = xOffset + i * xSpacing;
+                float yPos = 0f;
+                // Create the card at some position
+                GameObject cardGO = cardSpriteManager.CreateCard(spriteName, new Vector3(xPos, yPos, 0f), Quaternion.identity);
 
-            // Attach a small script so we know which "Card" logic object it represents
-            UnoCardHolder holder = cardGO.AddComponent<UnoCardHolder>();
-            holder.cardData = cardData;
-            holder.manager = this; // So it can call UnoGameManager when clicked
-            holder.ownerPlayer = gamePlay.Player1;
+                // Attach a small script so we know which "Card" logic object it represents
+                UnoCardHolder holder = cardGO.AddComponent<UnoCardHolder>();
+                holder.cardData = cardData;
+                holder.manager = this; // So it can call UnoGameManager when clicked
+                holder.ownerPlayer = gamePlay.Player1;
+            }
+
         }
-
-        // Player2’s hand at a different Y
-        for (int i = 0; i < gamePlay.Player2.Hand.Count; i++)
+        else
         {
-            Card cardData = gamePlay.Player2.Hand[i];
-            string spriteName = ConvertCardToSpriteName(cardData);
+            for (int i = 0; i < gamePlay.Player2.Hand.Count; i++)
+            {
+                Card cardData = gamePlay.Player2.Hand[i];
+                string spriteName = ConvertCardToSpriteName(cardData);
 
-            float xPos = xOffset + i * xSpacing;
-            float yPos = -3f;
-            GameObject cardGO = cardSpriteManager.CreateCard(spriteName, new Vector3(xPos, yPos, 0f), Quaternion.identity);
+                float xPos = xOffset + i * xSpacing;
+                float yPos = -3f;
+                GameObject cardGO = cardSpriteManager.CreateCard(spriteName, new Vector3(xPos, yPos, 0f), Quaternion.identity);
 
-            UnoCardHolder holder = cardGO.AddComponent<UnoCardHolder>();
-            holder.cardData = cardData;
-            holder.manager = this;
-            holder.ownerPlayer = gamePlay.Player2;
+                UnoCardHolder holder = cardGO.AddComponent<UnoCardHolder>();
+                holder.cardData = cardData;
+                holder.manager = this;
+                holder.ownerPlayer = gamePlay.Player2;
+            }
+
         }
+        
+
+        
+        
     }
 
     private void DisplayCurrentCard()

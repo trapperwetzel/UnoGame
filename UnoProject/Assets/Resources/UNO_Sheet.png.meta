@@ -370,7 +370,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WildCard
+      name: Wild
       rect:
         serializedVersion: 2
         x: 2226
@@ -2556,7 +2556,7 @@ TextureImporter:
       UNO_cards_deck.svg_97: -1487136763
       UNO_cards_deck.svg_98: 1932129983
       UNO_cards_deck.svg_99: 1727238653
-      WildCard: -689369721
+      Wild: -689369721
       Wild_DrawFour: 213747452
       Yellow_0: -937953180
       Yellow_1: -637160294

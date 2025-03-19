@@ -132,12 +132,14 @@ namespace UnoTerminal {
             {
                 case CardType.Number:
                 NumberCardTurn(cardToPlay);
+                SwitchPlayer();
                 break;
 
                 case CardType.Wild:
                 // For Wild, we let Unity handle color selection UI
                 // Then we can call a method like SetWildColor() to set the color
                 PlayCard(CurrentCard, cardToPlay);
+                SwitchPlayer();
                 break;
 
                 case CardType.DrawTwo:
@@ -148,25 +150,25 @@ namespace UnoTerminal {
                 case CardType.DrawFour:
                 PlayCard(CurrentCard, cardToPlay);
                 DrawFour();
+                // If stacking mode? 
                 // Also let Unity handle new color selection
                 break;
 
                 case CardType.Skip:
                 PlayCard(CurrentCard, cardToPlay);
                 // Skip means we skip the next player's turn
-                SwitchPlayer();
+                
                 break;
 
                 case CardType.Reverse:
                 PlayCard(CurrentCard, cardToPlay);
                 // In a 2-player game, Reverse acts like a Skip
-                // So you can do SwitchPlayer() again, or handle differently for more players
-                SwitchPlayer();
+                
+                
                 break;
             }
 
-            // 3) After the card effect, we normally move on to the next player's turn
-            SwitchPlayer();
+            
 
             return true;
         }
@@ -185,6 +187,7 @@ namespace UnoTerminal {
             Card drawnCard = GameDeck.Pop();
             drawnCard.PlaceInHand = GetPlaceInHand(p);
             p.AddToHand(drawnCard);
+            SwitchPlayer();
         }
 
         

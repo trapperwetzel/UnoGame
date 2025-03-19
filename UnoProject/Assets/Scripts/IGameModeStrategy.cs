@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnoTerminal;
 
-public interface ITurnStrategy
+public interface IGameModeStrategy
 {
     void HandleTurn(UnoGameManager gameManager);   
 }
 
-public class ClassicTurnStrategy : ITurnStrategy {
+public class ClassicTurnStrategy : IGameModeStrategy {
     public void HandleTurn(UnoGameManager gameManager)
     {
         gameManager.NextPlayer();
     }
 }
 
-public class StackingTurnStrategy : ITurnStrategy {
+public class StackingTurnStrategy : IGameModeStrategy {
     public void HandleTurn(UnoGameManager gameManager)
     {
         if (gameManager.gamePlay.CurrentCard.TypeOfCard == CardType.DrawTwo && gameManager.gamePlay.CurrentPlayer.HasDrawTwoCard())
