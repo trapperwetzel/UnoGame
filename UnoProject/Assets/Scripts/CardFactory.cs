@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UnoTerminal {
     public class CardFactory {
-        
+
         public static Card CreateCard(CardType type, CardColor color = CardColor.Red, int number = 0, int placeInHand = 0)
         {
             Card card = null;
@@ -39,9 +39,9 @@ namespace UnoTerminal {
             return card;
         }
 
-        
+
         /// Creates a NumberCard with the specified color and number.
-        
+
         public static NumberCard CreateNumberCard(CardColor color, int number, int placeInHand = 0)
         {
             var card = new NumberCard(color, number);
@@ -49,9 +49,9 @@ namespace UnoTerminal {
             return card;
         }
 
-        
+
         /// Creates a SkipCard with the specified color.
-        
+
         public static SkipCard CreateSkipCard(CardColor color, int placeInHand = 0)
         {
             var card = new SkipCard(color);
@@ -59,9 +59,9 @@ namespace UnoTerminal {
             return card;
         }
 
-        
+
         /// Creates a DrawTwoCard with the specified color.
-        
+
         public static DrawTwoCard CreateDrawTwoCard(CardColor color, int placeInHand = 0)
         {
             var card = new DrawTwoCard(color);
@@ -69,9 +69,9 @@ namespace UnoTerminal {
             return card;
         }
 
-        
+
         /// Creates a ReverseCard with the specified color.
-        
+
         public static ReverseCard CreateReverseCard(CardColor color, int placeInHand = 0)
         {
             var card = new ReverseCard(color);
@@ -79,9 +79,9 @@ namespace UnoTerminal {
             return card;
         }
 
-        
+
         /// Creates a WildCard instance.
-        
+
         public static WildCard CreateWildCard(int placeInHand = 0)
         {
             var card = new WildCard();
@@ -89,9 +89,9 @@ namespace UnoTerminal {
             return card;
         }
 
-        
+
         /// Creates a DrawFourCard instance.
-        
+
         public static DrawFourCard CreateDrawFourCard(int placeInHand = 0)
         {
             var card = new DrawFourCard();

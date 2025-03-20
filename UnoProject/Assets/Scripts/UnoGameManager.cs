@@ -8,85 +8,75 @@ public class UnoGameManager : MonoBehaviour {
 
     // The main logic object from console code
     public GamePlay gamePlay;
-    private IGameModeStrategy gameModeStrategy;
-
-    public void SetTurnStrategy(IGameModeStrategy strategy)
-    {gameModeStrategy = strategy;}
-    public void HandleTurn()
-    {gameModeStrategy.HandleTurn(this);}
+    
 
 
     void Start()
     {
+        InitializeGame();
+    }
+    public void InitializeGame()
+    {
+        Debug.Log("Game started!");
         // Create the deck & the gameplay logic
         gamePlay = new GamePlay();
         // Deal 7 cards to each player
         gamePlay.CreateHands();
 
-       // SetTurnStrategy(new ClassicTurnStrategy());  // Default
+        DisplayHands();
 
-        // Display the starting hands visually
-       // DisplayHands();
-        // Also display the current card
-        //DisplayCurrentCard();
-
+        DisplayCurrentCard();
         Debug.Log(gamePlay.CurrentCard);
         Debug.Log(gamePlay.CurrentPlayer);
     }
-    public void InitializeGame()
-    {
-        DisplayHands();
-        DisplayCurrentCard();
-    }
     private void DisplayHands()
     {
-        // Clear the board 
-        // Then spawn new visuals for each player's hand
-
-        float xOffset = -5f; // Just for spacing example
+        float xOffset = -5f; // For spacing
         float xSpacing = 1.5f;
-        if(gamePlay.CurrentPlayer == gamePlay.Player1)
+
+        // figure out which player's hand to display
+        Player currentP = gamePlay.CurrentPlayer;
+
+        // We'll create a reference for position offset
+        float yPos = (currentP == gamePlay.Player1) ? 0f : -3f;
+
+        // We'll also define a local method to get the player's hand & spawned list
+        List<Card> cardsToShow = currentP.Hand;
+        List<GameObject> spawnedObjs = currentP.SpawnedCardObjects;
+        Debug.Log("CardPool.Instance: " + (CardPool.Instance != null ? "Exists" : "Null"));
+        Debug.Log("cardSpriteManager: " + (cardSpriteManager != null ? "Assigned" : "Null"));
+        // For spacing
+        for (int i = 0; i < cardsToShow.Count; i++)
         {
-            for (int i = 0; i < gamePlay.Player1.Hand.Count; i++)
-            {
-                Card cardData = gamePlay.Player1.Hand[i];
-                // Convert the card info to a sprite name
-                string spriteName = ConvertCardToSpriteName(cardData);
-                float xPos = xOffset + i * xSpacing;
-                float yPos = 0f;
-                // Create the card at some position
-                GameObject cardGO = cardSpriteManager.CreateCard(spriteName, new Vector3(xPos, yPos, 0f), Quaternion.identity);
+            Card cardData = cardsToShow[i];
+            string spriteName = ConvertCardToSpriteName(cardData);
 
-                // Attach a small script so we know which "Card" logic object it represents
-                UnoCardHolder holder = cardGO.AddComponent<UnoCardHolder>();
-                holder.cardData = cardData;
-                holder.manager = this; // So it can call UnoGameManager when clicked
-                holder.ownerPlayer = gamePlay.Player1;
-            }
+            float xPos = xOffset + i * xSpacing;
 
+            // 1) Get a card GameObject from the pool
+            
+            GameObject cardGO = CardPool.Instance.GetCard();
+            Debug.Log("cardGO: " + (cardGO != null ? cardGO.name : "Null"));
+            // 2) Position it
+            cardGO.transform.position = new Vector3(xPos, yPos, 0f);
+            cardGO.transform.rotation = Quaternion.identity;
+
+            // 3) Assign the correct sprite
+            SpriteRenderer sr = cardGO.GetComponent<SpriteRenderer>();
+            if (sr == null) sr = cardGO.AddComponent<SpriteRenderer>();
+            Sprite theSprite = cardSpriteManager.GetSpriteByName(spriteName);
+            sr.sprite = theSprite;
+
+            // 4) Attach or refresh UnoCardHolder
+            UnoCardHolder holder = cardGO.GetComponent<UnoCardHolder>();
+            if (holder == null) holder = cardGO.AddComponent<UnoCardHolder>();
+            holder.cardData = cardData;
+            holder.manager = this;
+            holder.ownerPlayer = currentP;
+
+            // 5) Track this card GameObject in the player's list
+            spawnedObjs.Add(cardGO);
         }
-        else
-        {
-            for (int i = 0; i < gamePlay.Player2.Hand.Count; i++)
-            {
-                Card cardData = gamePlay.Player2.Hand[i];
-                string spriteName = ConvertCardToSpriteName(cardData);
-
-                float xPos = xOffset + i * xSpacing;
-                float yPos = -3f;
-                GameObject cardGO = cardSpriteManager.CreateCard(spriteName, new Vector3(xPos, yPos, 0f), Quaternion.identity);
-
-                UnoCardHolder holder = cardGO.AddComponent<UnoCardHolder>();
-                holder.cardData = cardData;
-                holder.manager = this;
-                holder.ownerPlayer = gamePlay.Player2;
-            }
-
-        }
-        
-
-        
-        
     }
 
     private void DisplayCurrentCard()
@@ -95,7 +85,16 @@ public class UnoGameManager : MonoBehaviour {
         if (currentCard == null) return;
 
         string spriteName = ConvertCardToSpriteName(currentCard);
-        cardSpriteManager.CreateCard(spriteName, new Vector3(0f, 3f, 0f), Quaternion.identity);
+
+        GameObject cardGO = CardPool.Instance.GetCard();
+        cardGO.transform.position = new Vector3(0f, 3f, 0f);
+        cardGO.transform.rotation = Quaternion.identity;
+
+        SpriteRenderer sr = cardGO.GetComponent<SpriteRenderer>();
+        if (sr == null) sr = cardGO.AddComponent<SpriteRenderer>();
+        sr.sprite = cardSpriteManager.GetSpriteByName(spriteName);
+
+        // for future*** track it in a "CurrentCardObj" variable, or discard list, etc.
     }
 
 
@@ -125,17 +124,7 @@ public class UnoGameManager : MonoBehaviour {
         // Also re-display the new CurrentCard on top of the discard pile
         RedrawAll();
     }
-    public void SwitchToStackingMode()
-    {
-        SetTurnStrategy(new StackingTurnStrategy());
-        Debug.Log("Stacking rule enabled!");
-    }
 
-    public void SwitchToClassicMode()
-    {
-        SetTurnStrategy(new ClassicTurnStrategy());
-        Debug.Log("Classic mode enabled!");
-    }
     public void OnDrawClickedCurrentPlayer()
     {
         OnDrawCardClicked(gamePlay.CurrentPlayer);
@@ -150,8 +139,10 @@ public class UnoGameManager : MonoBehaviour {
         }
 
         gamePlay.DrawCard(owner);
-        // Redraw
+        // Redraw and Switch Players
+        gamePlay.SwitchPlayer();
         RedrawAll();
+        
 
         
         // can call gamePlay.SwitchPlayer() here if needed?
@@ -159,13 +150,21 @@ public class UnoGameManager : MonoBehaviour {
 
     private void RedrawAll()
     {
-        // remove all card objects from the scene, then re-spawn them
-        
-        foreach (var obj in FindObjectsOfType<UnoCardHolder>())
+        // Return Player1's old cards
+        foreach (var cardObj in gamePlay.Player1.SpawnedCardObjects)
         {
-            Destroy(obj.gameObject);
+            CardPool.Instance.ReturnCard(cardObj);
         }
+        gamePlay.Player1.SpawnedCardObjects.Clear();
 
+        // Return Player2's old cards
+        foreach (var cardObj in gamePlay.Player2.SpawnedCardObjects)
+        {
+            CardPool.Instance.ReturnCard(cardObj);
+        }
+        gamePlay.Player2.SpawnedCardObjects.Clear();
+
+        // Now re-display with fresh visuals
         DisplayHands();
         DisplayCurrentCard();
     }
@@ -188,9 +187,13 @@ public class UnoGameManager : MonoBehaviour {
 
     public void NextPlayer()
     {
-        gamePlay.SwitchPlayer();  // Assuming gamePlay has a method to change the current player
+        gamePlay.SwitchPlayer();  
         Debug.Log($"Next turn: {gamePlay.CurrentPlayer.Name}");
     }
+
+
+   
+
 
     private string ConvertCardToSpriteName(Card cardData)
     {

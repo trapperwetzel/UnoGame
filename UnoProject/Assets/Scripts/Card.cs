@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnoTerminal
-{
+namespace UnoTerminal {
 
-    public enum CardType
-    {
+    public enum CardType {
         Number, // Just a regular number card 
         Skip, // Skips the next player 
         DrawTwo, // Makes the next player draw two cards 
@@ -17,59 +15,57 @@ namespace UnoTerminal
         Wild  // Changes the color of the game 
     }
 
-    public enum CardColor
-    {
+    public enum CardColor {
         Red,
         Blue,
         Green,
         Yellow
     }
 
-    
+
     public abstract class Card {
 
         public abstract CardType TypeOfCard { get; }
-        public  CardColor ColorOfCard { get; set; }
+        public CardColor ColorOfCard { get; set; }
         public int PlaceInHand { get; set; }
 
-        
+
         public Card()
         {
 
         }
-        
+
         public Card(CardColor colorOfCard)
         {
-            
+
             ColorOfCard = colorOfCard;
         }
 
         public Card(CardColor colorOfCard, int aPlaceInHand)
         {
-            
+
             ColorOfCard = colorOfCard;
             PlaceInHand = aPlaceInHand;
         }
 
         public virtual int? GetNumber() => null;
 
-        public  override string ToString()
+        public override string ToString()
         {
             string message = $"Card: {ColorOfCard} {TypeOfCard}\n# In Hand: {PlaceInHand}";
-            return message;   
+            return message;
         }
 
     }
 
 
-    public class NumberCard : Card
-    {
+    public class NumberCard : Card {
         public override CardType TypeOfCard => CardType.Number;
         public int Number { get; set; }
 
         public NumberCard(CardColor colorOfCard, int aNumber)
         {
-            
+
             ColorOfCard = colorOfCard;
             Number = aNumber;
         }
@@ -85,8 +81,7 @@ namespace UnoTerminal
 
     }
 
-    public class SkipCard : Card
-    {
+    public class SkipCard : Card {
         public override CardType TypeOfCard => CardType.Skip;
 
         public SkipCard(CardColor colorOfCard)
@@ -96,8 +91,7 @@ namespace UnoTerminal
 
     }
 
-    public class ReverseCard : Card
-    {
+    public class ReverseCard : Card {
         public override CardType TypeOfCard => CardType.Reverse;
 
         public ReverseCard(CardColor colorOfCard)
@@ -106,8 +100,7 @@ namespace UnoTerminal
         }
     }
 
-    public class WildCard : Card
-    {
+    public class WildCard : Card {
         public override CardType TypeOfCard => CardType.Wild;
 
         public override string ToString()
@@ -117,8 +110,7 @@ namespace UnoTerminal
     }
 
 
-    public class DrawTwoCard : Card
-    {
+    public class DrawTwoCard : Card {
         public override CardType TypeOfCard => CardType.DrawTwo;
 
         public DrawTwoCard(CardColor colorOfCard)
@@ -127,11 +119,10 @@ namespace UnoTerminal
         }
     }
 
-    public class DrawFourCard : WildCard
-    {
+    public class DrawFourCard : WildCard {
         public override CardType TypeOfCard => CardType.DrawFour;
 
-        
+
     }
 
 

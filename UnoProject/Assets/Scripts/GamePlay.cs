@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace UnoTerminal {
     
-    // Handles the main UNO gameplay logic without any console input/output.
+    // Handles the main UNO gameplay logic
     
     
     public class GamePlay {
@@ -117,56 +117,19 @@ namespace UnoTerminal {
         
         // Called when a player attempts to play a card from their hand.
         // Return true if it was successfully played, false if invalid.
+        // Uses the PlayCardStrategy (Strategy Pattern)
         
-        public bool TryPlayCard(Card cardToPlay)
+        public bool TryPlayCard(Card playedCard)
         {
             // 1) Check if the card is valid to play
-            if (!CheckIfValid(cardToPlay))
+            if (!CheckIfValid(playedCard))
             {
                 // In Unity, you'd show a warning or message in the UI.
                 return false;
             }
 
-            // 2) Card is valid. Handle its effect based on its type
-            switch (cardToPlay.TypeOfCard)
-            {
-                case CardType.Number:
-                NumberCardTurn(cardToPlay);
-                SwitchPlayer();
-                break;
-
-                case CardType.Wild:
-                // For Wild, we let Unity handle color selection UI
-                // Then we can call a method like SetWildColor() to set the color
-                PlayCard(CurrentCard, cardToPlay);
-                SwitchPlayer();
-                break;
-
-                case CardType.DrawTwo:
-                PlayCard(CurrentCard, cardToPlay);
-                DrawTwo();
-                break;
-
-                case CardType.DrawFour:
-                PlayCard(CurrentCard, cardToPlay);
-                DrawFour();
-                // If stacking mode? 
-                // Also let Unity handle new color selection
-                break;
-
-                case CardType.Skip:
-                PlayCard(CurrentCard, cardToPlay);
-                // Skip means we skip the next player's turn
-                
-                break;
-
-                case CardType.Reverse:
-                PlayCard(CurrentCard, cardToPlay);
-                // In a 2-player game, Reverse acts like a Skip
-                
-                
-                break;
-            }
+            IPlayCardStrategy strategy = PlayCardStrategyFactory.GetStrategy(playedCard);
+            strategy.Execute(playedCard, this);
 
             
 
@@ -187,8 +150,11 @@ namespace UnoTerminal {
             Card drawnCard = GameDeck.Pop();
             drawnCard.PlaceInHand = GetPlaceInHand(p);
             p.AddToHand(drawnCard);
-            SwitchPlayer();
+            
         }
+
+
+
 
         
         // Called when a Wild card is played in Unity
@@ -242,18 +208,12 @@ namespace UnoTerminal {
         }
 
         
-        // Called if the card to play is a NumberCard. That means color or number must match.
         
-        private void NumberCardTurn(Card tempcard)
-        {
-            // Just play it; we already validated it in CheckIfValid
-            PlayCard(CurrentCard, tempcard);
-        }
 
         
         // Move from CurrentCard -> Discard pile, and set the new card as CurrentCard.
         
-        private void PlayCard(Card oldCard, Card newCard)
+        public void PlayCard(Card oldCard, Card newCard)
         {
             // Remove the chosen card from the player's hand
             CurrentPlayer.RemoveFromHand(newCard);
@@ -270,7 +230,7 @@ namespace UnoTerminal {
         
         // Forces the next player to draw 2 cards.
         
-        private void DrawTwo()
+        public void DrawTwo()
         {
             Player nextPlayer = (CurrentPlayer == Player1) ? Player2 : Player1;
             for (int i = 0; i < 2; i++)
@@ -282,7 +242,7 @@ namespace UnoTerminal {
         
         // Forces the next player to draw 4 cards.
         
-        private void DrawFour()
+        public void DrawFour()
         {
             Player nextPlayer = (CurrentPlayer == Player1) ? Player2 : Player1;
             for (int i = 0; i < 4; i++)

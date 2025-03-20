@@ -11,7 +11,8 @@ namespace UnoTerminal
 
         private string? name = "N/A";
         private List<Card> hand = new List<Card>();
-        
+        //Pool object
+        public List<GameObject> SpawnedCardObjects { get; } = new List<GameObject>();
         public string Name
         {
             get { return name; }

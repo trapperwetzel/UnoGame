@@ -39,4 +39,18 @@ public class CardSpriteManager : MonoBehaviour {
 
         return newCard;
     }
+
+    public Sprite GetSpriteByName(string spriteName)
+    {
+        if (cardSprites.TryGetValue(spriteName, out Sprite sprite))
+        {
+            return sprite;
+        }
+        else
+        {
+            Debug.LogWarning($"Sprite '{spriteName}' not found in CardSpriteManager!");
+            return null;
+        }
+    }
+
 }
