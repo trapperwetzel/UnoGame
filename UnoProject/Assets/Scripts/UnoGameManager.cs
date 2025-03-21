@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnoTerminal; // So we can access the classes like GamePlay, Card, etc.
 
-public class UnoGameManager : MonoBehaviour {
+public class UnoGameManager : Subject {
     [SerializeField] private CardSpriteManager cardSpriteManager;
+
+
+
+
+
 
     // The main logic object from console code
     public GamePlay gamePlay;
-    
+
 
 
     void Start()
     {
         InitializeGame();
+
     }
     public void InitializeGame()
     {
@@ -31,14 +37,14 @@ public class UnoGameManager : MonoBehaviour {
     }
     private void DisplayHands()
     {
-        float xOffset = -5f; // For spacing
-        float xSpacing = 1.5f;
+        float cardWidth = 2.5f; // Adjust for better spacing
+        float xOffset = -(gamePlay.CurrentPlayer.Hand.Count / 2f) * cardWidth;
+        float xSpacing = cardWidth;
 
         // figure out which player's hand to display
         Player currentP = gamePlay.CurrentPlayer;
 
-        // We'll create a reference for position offset
-        float yPos = (currentP == gamePlay.Player1) ? 0f : -3f;
+
 
         // We'll also define a local method to get the player's hand & spawned list
         List<Card> cardsToShow = currentP.Hand;
@@ -54,12 +60,15 @@ public class UnoGameManager : MonoBehaviour {
             float xPos = xOffset + i * xSpacing;
 
             // 1) Get a card GameObject from the pool
-            
+
             GameObject cardGO = CardPool.Instance.GetCard();
-            Debug.Log("cardGO: " + (cardGO != null ? cardGO.name : "Null"));
+            //  Debug.Log("cardGO: " + (cardGO != null ? cardGO.name : "Null"));
+
+
             // 2) Position it
-            cardGO.transform.position = new Vector3(xPos, yPos, 0f);
-            cardGO.transform.rotation = Quaternion.identity;
+
+            cardGO.transform.position = new Vector3(xPos, -3f, 0f);
+            cardGO.transform.localScale = Vector3.one * 2.5f;
 
             // 3) Assign the correct sprite
             SpriteRenderer sr = cardGO.GetComponent<SpriteRenderer>();
@@ -76,7 +85,9 @@ public class UnoGameManager : MonoBehaviour {
 
             // 5) Track this card GameObject in the player's list
             spawnedObjs.Add(cardGO);
+
         }
+        CheckForUno();
     }
 
     private void DisplayCurrentCard()
@@ -87,14 +98,14 @@ public class UnoGameManager : MonoBehaviour {
         string spriteName = ConvertCardToSpriteName(currentCard);
 
         GameObject cardGO = CardPool.Instance.GetCard();
-        cardGO.transform.position = new Vector3(0f, 3f, 0f);
-        cardGO.transform.rotation = Quaternion.identity;
+        cardGO.transform.position = new Vector3(0f, 7f, 0f);
+        cardGO.transform.localScale = Vector3.one * 2.5f;
 
         SpriteRenderer sr = cardGO.GetComponent<SpriteRenderer>();
         if (sr == null) sr = cardGO.AddComponent<SpriteRenderer>();
         sr.sprite = cardSpriteManager.GetSpriteByName(spriteName);
 
-        // for future*** track it in a "CurrentCardObj" variable, or discard list, etc.
+
     }
 
 
@@ -116,12 +127,9 @@ public class UnoGameManager : MonoBehaviour {
             Debug.Log("Invalid card!");
             return;
         }
-
-        // If it's a Wild or DrawFour, we might need the user to pick a color
-        // For now, default to the card's color or keep it as is
-
-        // After playing, re-draw the hands visually so the card is removed from that player's hand
-        // Also re-display the new CurrentCard on top of the discard pile
+        NotifyObservers(new UnoEvent(UnoEventType.CardPlayed, cardData));
+        CheckForUno();
+        CheckForWinner();
         RedrawAll();
     }
 
@@ -139,13 +147,12 @@ public class UnoGameManager : MonoBehaviour {
         }
 
         gamePlay.DrawCard(owner);
+        NotifyObservers(new UnoEvent(UnoEventType.CardDrawn, owner));
         // Redraw and Switch Players
         gamePlay.SwitchPlayer();
+        CheckForWinner();
         RedrawAll();
-        
 
-        
-        // can call gamePlay.SwitchPlayer() here if needed?
     }
 
     private void RedrawAll()
@@ -187,10 +194,37 @@ public class UnoGameManager : MonoBehaviour {
 
     public void NextPlayer()
     {
-        gamePlay.SwitchPlayer();  
+        gamePlay.SwitchPlayer();
         Debug.Log($"Next turn: {gamePlay.CurrentPlayer.Name}");
     }
 
+
+    public void CheckForWinner()
+    {
+        if (gamePlay.Player1.Hand.Count == 0 || gamePlay.Player2.Hand.Count == 0) // Player has no cards left
+        {
+            Debug.Log($"{gamePlay.CurrentPlayer.Name} has won the game!");
+            NotifyObservers(new UnoEvent(UnoEventType.GameWon, gamePlay.CurrentPlayer));
+        }
+    }
+    public void CheckForUno()
+    {
+        Player currentPlayer = gamePlay.CurrentPlayer;
+
+        // Check if the current player has exactly 1 card
+        if (currentPlayer.Hand.Count == 1)
+        {
+            Debug.Log($"{currentPlayer.Name} has 1 card left! UNO should be called!");
+            NotifyObservers(new UnoEvent(UnoEventType.UnoCalled));
+        }
+    }
+    public void SetWildColor(CardColor chosencolor)
+    {
+        Debug.Log($"{gamePlay.CurrentCardColor}");
+        gamePlay.SetWildColor(chosencolor);
+        Debug.Log($"Color Chosen: {gamePlay.CurrentCardColor}");
+
+    }
 
    
 

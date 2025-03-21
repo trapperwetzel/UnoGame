@@ -5,7 +5,8 @@ using UnityEngine;
 public enum UnoEventType {
     CardPlayed,
     CardDrawn,
-    UnoCalled
+    UnoCalled,
+    GameWon
 }
 
 // UnoEvent class for the Observer Pattern

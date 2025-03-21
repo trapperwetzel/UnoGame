@@ -18,7 +18,7 @@ namespace UnoTerminal {
         // Current card in play (on top of the discard pile)
         private Card currentcard;
 
-        // The "active" color in effect (especially important for Wild, DrawFour, etc.)
+        // The "active" color in effect (especially important for Wild and DrawFour cards)
         private CardColor currentcardcolor;
 
         // Whose turn it is right now
